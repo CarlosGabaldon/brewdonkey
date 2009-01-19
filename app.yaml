@@ -1,0 +1,8 @@
+application: brewdonkey
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: .*
+  script: handlers/brew/list_handler.py
