@@ -18,7 +18,9 @@ class ListHandler(webapp.RequestHandler):
     def get(self):
         
         self.response.out.write("""
-            <html><body>
+            <html><head>
+            <title>BrewDonkey.com</title>
+            </head<body>
             <h2>Beers</h2>
             <ul>""")
         
@@ -29,13 +31,18 @@ class ListHandler(webapp.RequestHandler):
             
         self.response.out.write("""
             </ul>  
-            <a href='/new'>Add your beer</a>""")
+            <a href='/new'>Add your beer</a>
+            </body>
+            </html>""")
     
 class NewHandler(webapp.RequestHandler):
 
     def get(self):
     
         self.response.out.write("""
+              <html><head>
+              <title>BrewDonkey.com</title>
+              </head<body>
               <h2>Add your beer</h2>
               <form action="/create" method="post">
                 <div>Beer name:<input type="text" id="name" name="name"/></div>
