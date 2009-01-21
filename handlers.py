@@ -16,15 +16,25 @@ import models
 class ListHandler(webapp.RequestHandler):
 
     def get(self):
-        self.response.out.write('<html><body>')
-
+        
+        self.response.out.write("""
+            <html><body>
+            <h2>Beers</h2>
+            <ul>""")
+        
         beers = models.Beer.find_popular()
         
-        self.response.out.write("<ul>")
-        for models.beer in beers:
-            self.response.out.write('<li>%s</li> wrote:' % beer.name)
+        for beer in beers:
+            self.response.out.write("<li>%s</li>" % beer.name)
             
-        # Write the submission form and the footer of the page
+        self.response.out.write("""
+            </ul>  
+            <a href='/new'>Add your beer</a>""")
+    
+class NewHandler(webapp.RequestHandler):
+
+    def get(self):
+    
         self.response.out.write("""
               <h2>Add your beer</h2>
               <form action="/create" method="post">
@@ -34,19 +44,12 @@ class ListHandler(webapp.RequestHandler):
               </form>
             </body>
           </html>""")
-        
-    
-class NewHandler(webapp.RequestHandler):
-
-    def get(self):
-        self.response.out.write('New Handler')
 
 class CreateHandler(webapp.RequestHandler):
 
     def post(self):
-        beer = models.Beer()
-        beer.name = self.request.get('name')
-        beer.description = self.request.get('description')
+        beer = models.Beer(name=self.request.get('name'),
+                           description=self.request.get('description'))
         beer.put()
         self.redirect('/')
     
