@@ -6,9 +6,11 @@ brew_handler.py
 Created by  on 2009-01-19.
 Copyright (c) 2009 __BrewDonkey.com__. All rights reserved.
 """
+import os
 import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.ext.webapp import template
 import models
 
 
@@ -17,24 +19,14 @@ class ListHandler(webapp.RequestHandler):
 
     def get(self):
         
-        self.response.out.write("""
-            <html><head>
-            <title>BrewDonkey.com</title>
-            </head<body>
-            <h2>Beers</h2>
-            <ul>""")
-        
         beers = models.Beer.find_popular()
-        
-        for beer in beers:
-            self.response.out.write("<li>%s</li>" % beer.name)
-            
-        self.response.out.write("""
-            </ul>  
-            <a href='/new'>Add your beer</a>
-            </body>
-            </html>""")
     
+        response = dict(
+              beers=beers)
+
+        path = os.path.join(os.path.dirname(__file__), 'templates/list.html')
+        self.response.out.write(template.render(path, response))
+
 class NewHandler(webapp.RequestHandler):
 
     def get(self):
