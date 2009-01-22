@@ -1,16 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+{% extends "base.html" %}
 
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>BrewDonkey.com</title>
-	<meta name="generator" content="TextMate http://macromates.com/">
-	<meta name="author" content="Carlos Gabaldon">
-	<!-- Date: 2009-01-21 -->
-</head>
-<body>
-  <h2>Popular</h2>
+{% block content %}
+
   <ul>
   {% for beer in beers %}
       <li>Beer: {{ beer.name }} - 
@@ -18,8 +9,11 @@
       </li> 
   {% endfor %}
   </ul>
+  
+  <br/>
+  <br/>
 
   <a href='/beers/new'>Add your beer</a>
   
-</body>
-</html>
+{% endblock %}
+  

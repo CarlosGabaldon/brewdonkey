@@ -9,7 +9,7 @@ handlers:
 
 - url: /favicon.ico
   static_files: static/images/favicon.ico
-  upload: static/images/favicon.ico
+  upload: static/css/images/favicon.ico
   
 - url: .*
   script: handlers.py
