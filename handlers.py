@@ -13,7 +13,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 import models
 
-
+# design api with app.....
 
 class ListHandler(webapp.RequestHandler):
 
@@ -21,8 +21,22 @@ class ListHandler(webapp.RequestHandler):
         
         beers = models.Beer.find_popular()
     
-        response = dict(
-              beers=beers)
+        # this will be the common api format...
+        if self.request.get('format') == "xml":
+            #refactor this into the models..to return xml or json or list
+            #something like:
+            #  beers = models.Beer.find_popular(format=xml)
+            #  beers = models.Beer.find_popular(format=json)
+            response = "<beers>"
+            for beer in beers:
+                response = response + beer.to_xml()
+            response = response + "</beers>"
+            self.response.out.write(response)
+            return
+        # common api...
+            
+        response = dict(beers=beers)
+            
 
         path = os.path.join(os.path.dirname(__file__), 'templates/list.html')
         self.response.out.write(template.render(path, response))
@@ -91,13 +105,14 @@ def main():
 
     application = webapp.WSGIApplication([
         ('/', ListHandler),
-        ('/new', NewHandler),
-        ('/create', CreateHandler),
-        ('/edit', EditHandler),
-        ('/update', UpdateHandler),
-        ('/search', SearchHandler),
-        ('/vote', VoteHandler),
-        ('/view', ViewHandler),
+        ('/beers/list', ListHandler),
+        ('/beers/new', NewHandler),
+        ('/beers/create', CreateHandler),
+        ('/beers/edit', EditHandler),
+        ('/beers/update', UpdateHandler),
+        ('/beers/search', SearchHandler),
+        ('/beers/vote', VoteHandler),
+        ('/beers/view', ViewHandler),
         ('/.*', NotFoundHandler)], debug=True)
                                        
     run_wsgi_app(application)
