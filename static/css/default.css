@@ -50,7 +50,7 @@ img.right {
 #header {
 	height: 110px;
 	margin: 0 auto;
-	text-transform: uppercase;
+	/*text-transform: uppercase;*/
 }
 
 #logo {
@@ -178,7 +178,7 @@ img.right {
 	margin: 0;
 	padding: 15px 0 0 20px;
 	background: url(images/img15.gif) no-repeat;
-	text-transform: uppercase;
+/*	text-transform: uppercase;*/
 	letter-spacing: -1px;
 	font-size: 1.6em;
 	font-weight: bold;
@@ -201,7 +201,7 @@ img.right {
 	margin: 0;
 	padding: 15px 0 0 20px;
 	background: url(images/img05.gif) no-repeat right top;
-	text-transform: uppercase;
+/*	text-transform: uppercase;*/
 	letter-spacing: -1px;
 	font-size: 1.6em;
 	font-weight: bold;

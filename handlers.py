@@ -45,18 +45,8 @@ class NewHandler(webapp.RequestHandler):
 
     def get(self):
     
-        self.response.out.write("""
-              <html><head>
-              <title>BrewDonkey.com</title>
-              </head<body>
-              <h2>Add your beer</h2>
-              <form action="/create" method="post">
-                <div>Beer name:<input type="text" id="name" name="name"/></div>
-                <div>Beer desc:<textarea name="description" rows="3" cols="60"></textarea></div>
-                <div><input type="submit" value="Submit"></div>
-              </form>
-            </body>
-          </html>""")
+        path = os.path.join(os.path.dirname(__file__), 'templates/new.html')
+        self.response.out.write(template.render(path, None))
 
 class CreateHandler(webapp.RequestHandler):
 
