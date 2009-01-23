@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block page_name %}New Beer{% endblock %}
+
+{% block content %}
+
+  <form action="/beers/create" method="post">
+    <div>Beer name:<br/><input type="text" id="name" name="name"/></div>
+    <div>Beer desc:<br/><textarea name="description" rows="3" cols="60"></textarea></div>
+    <div><input type="submit" value="Submit"> or <a href="/">cancel</a></div>
+  </form>
+  
+{% endblock %}
