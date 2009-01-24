@@ -88,6 +88,16 @@
     .padding_15 {
         padding: 15px;
     }        
+    
+    input.text_field.big {
+    font-size: 24px;
+    }
+    
+    .wide {
+    max-width:80%;
+    min-width:80%;
+    width:80%;
+    }
 
 /* Misc. */
 

@@ -36,26 +36,9 @@
               </ul>
           </div>
           <div id="content_container">
-
-            <div style="background:url('/static/css/images/content_top.png') no-repeat top center;">
-              <div style="background:url('/static/css/images/content_bottom.png') no-repeat bottom center;">
-                  <div id="content">
-                    <div style="position:relative; background-color:#f2f2f2; margin-top:30px;">
-                        <div style="padding:20px;">
-                          {% block content %}{% endblock %}
-                        </div>
-
-                        <div>
-                            <img src="/images/round_corner_top_left.png" class="top_left_corner"/>
-                            <img src="/images/round_corner_top_right.png" class="top_right_corner"/>
-                            <img src="/images/round_corner_bottom_left.png" class="bottom_left_corner"/>
-                            <img src="/images/round_corner_bottom_right.png" class="bottom_right_corner"/>
-
-                        </div>
-
-                    </div>
-
-                  </div>
+            <div id="content">
+              <div style="padding:15px;">
+                {% block content %}{% endblock %}
               </div>
             </div>
           </div>
