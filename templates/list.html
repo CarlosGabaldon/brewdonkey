@@ -5,10 +5,11 @@
 
 {% block content %}
 
+<h2>Popular Beers</h2>
   <ul>
   {% for beer in beers %}
-      <li>Beer: {{ beer.name }} - 
-          <blockquote>{{ beer.description|escape }}</blockquote>
+      <li>{{ beer.name }} - 
+          {{ beer.description|escape }}
       </li> 
   {% endfor %}
   </ul>

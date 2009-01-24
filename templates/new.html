@@ -4,10 +4,13 @@
 
 {% block content %}
 
+<h2>Add your Beer</h2>
+
   <form action="/beers/create" method="post">
-    <div>Beer name:<br/><input type="text" id="name" name="name"/></div>
-    <div>Beer desc:<br/><textarea name="description" rows="3" cols="60"></textarea></div>
-    <div><input type="submit" value="Submit"> or <a href="/">cancel</a></div>
+    <div>Name:<br/><input type="text" id="name" name="name"/></div><br/>
+    <div>Description:<br/><textarea name="description" rows="3" cols="60"></textarea></div><br/>
+    <div>Brewery:<br/><input type="text" id="brewery_name" name="brewery_name"/></div><br/>
+    <div><input type="submit" value="Submit" class="blue_button big"> or <a href="/">cancel</a></div>
   </form>
   
 {% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block page_name %}Search Beer{% endblock %}
+
+{% block content %}
+
+<h2>Search for your beer</h2>
+
+  <form action="/beers/search" method="post">
+    <div>
+      <input type="text" id="name" size="50" name="name"/>
+      <input type="submit" value="Submit" class="blue_button big">
+    </div>
+  </form>
+  
+{% endblock %}

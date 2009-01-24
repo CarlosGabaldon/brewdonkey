@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html lang="en">
 <head>
@@ -11,112 +11,59 @@
   <meta name="description" content="" />
   <link href="/static/css/default.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
-<body>
-<!-- start header -->
-<div id="header">
-	<div id="logo">
-		<h1><a href="/" style="text-decoration:none">BrewDonkey</a></h1>
-		<p>The beer community</p>
-	</div>
-	<div id="menu">
-		<ul>
-			<li class="current_page_item"><a href="#">Popular Beers</a></li>
-			<li><a href="#">New Beers</a></li>
-			<li><a href="#">Search Beers</a></li>
-			<li><a href="#">Login</a></li>
-			<li><a href="#">Join</a></li>
-		</ul>
-	</div>
-</div>
-<!-- end header -->
-<!-- start page -->
-<div id="page">
-	<!-- start content -->
-	<div id="content">
-		<div class="post greenbox">
-			<div class="title">
-				<h1>{% block page_name %}{% endblock %}</h1>
-			</div>
-			<div class="entry">
-				{% block content %}{% endblock %}
-			</div>
-			<div class="btm">
-				<div class="l">
-					<div class="r">
-						<p class="meta"><a href="#" class="more">Read More</a> &nbsp;&nbsp;&nbsp; <a href="#" class="comments">Comments (33)</a></p>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--
-		<div class="two-columns">
-			<div class="columnA">
-				<div class="title red">
-					<h2>Lorem Ipsum</h2>
-				</div>
-				<div class="content">
-					<ul>
-						<li><a href="#">Aliquam libero</a></li>
-						<li><a href="#">Consectetuer adipiscing elit</a></li>
-						<li><a href="#">metus aliquam pellentesque</a></li>
-						<li><a href="#">Suspendisse iaculis mauris</a></li>
-						<li><a href="#">Urnanet non molestie semper</a></li>
-						<li><a href="#">Proin gravida orci porttitor</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="columnB">
-				<div class="title blue">
-					<h2>Gravida Orci</h2>
-				</div>
-				<div class="content">
-					<ul>
-						<li><a href="#">Aliquam libero</a></li>
-						<li><a href="#">Consectetuer adipiscing elit</a></li>
-						<li><a href="#">metus aliquam pellentesque</a></li>
-						<li><a href="#">Suspendisse iaculis mauris</a></li>
-						<li><a href="#">Urnanet non molestie semper</a></li>
-						<li><a href="#">Proin gravida orci porttitor</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="btm">&nbsp;</div>
-		</div>
-	-->
-	</div>
-	<!-- end content -->
-	<!-- start sidebar -->
-	<div id="sidebar">
-		<ul>
-			<li>
-				<h2>New Beers</h2>
-				<ul>
-					<li><a href="#">Hell or High Watermelon</a></li>
-					<li><a href="#">Bayern Pilsener</a></li>
-					<li><a href="#">Bell's Porter</a></li>
-					<li><a href="#">Caldera Ginger Ale</a></li>
-					<li><a href="#">LTD</a></li>
-					<li><a href="#">Hop Head Red</a></li>
-				</ul>
-			</li>
-			<li>
-				<h2>Latest comments</h2>
-				<ul>
-					<li><a href="#">Pete's Wicked has a full body ..</a></li>
-					<li><a href="#">Snow Cap Ale should be a year round ..</a></li>
-					<li><a href="#">Fat Tire is still my favorite ..</a></li>
-					<li><a href="#">I like a good Corona sometimes after ..</a></li>
-					<li><a href="#">You can not disagree that you need ..</a></li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-	<!-- end sidebar -->
-</div>
-<!-- end page -->
-<div style="clear: both;">&nbsp;</div>
-<div id="footer">
-	<p>&copy;2009 All Rights Reserved. &nbsp;&bull;&nbsp; BrewDonkey.com</a></p>
-</div>
-</body>
+    <body id="main_help">
+      <div id="container">            
+          <div id="header">
+
+              <h1><a href="/">BrewDonkey</a></h1>
+              <ul id="primary_nav">
+                  <li class="nav">
+                      <a href="#" >Login</a>
+                  </li>
+                  
+                  <li class="nav">
+                      <a href="/beers/search" >Search</a>
+                  </li>
+                  
+                  <li class="nav">
+                      <a href="/beers/new" >New</a>
+                  </li>
+                  
+                  <li class="nav active">
+                    <a href="/">Popular</a>
+                  </li>
+                          
+              </ul>
+          </div>
+          <div id="content_container">
+
+            <div style="background:url('/static/css/images/content_top.png') no-repeat top center;">
+              <div style="background:url('/static/css/images/content_bottom.png') no-repeat bottom center;">
+                  <div id="content">
+                    <div style="position:relative; background-color:#f2f2f2; margin-top:30px;">
+                        <div style="padding:20px;">
+                          {% block content %}{% endblock %}
+                        </div>
+
+                        <div>
+                            <img src="/images/round_corner_top_left.png" class="top_left_corner"/>
+                            <img src="/images/round_corner_top_right.png" class="top_right_corner"/>
+                            <img src="/images/round_corner_bottom_left.png" class="bottom_left_corner"/>
+                            <img src="/images/round_corner_bottom_right.png" class="bottom_right_corner"/>
+
+                        </div>
+
+                    </div>
+
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div id="footer">
+              <strong>&copy; <a href="http://www.brewdonkey.com">BrewDonkey.com</a></strong>
+          </div>
+      </div>      
+    </body>
+
 </html>
+

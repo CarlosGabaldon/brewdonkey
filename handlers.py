@@ -53,6 +53,9 @@ class CreateHandler(webapp.RequestHandler):
     def post(self):
         beer = models.Beer(name=self.request.get('name'),
                            description=self.request.get('description'))
+                           
+        brewery = models.Brewery(name=self.request.get('brewery_name'))
+        beer.brewery = brewery
         beer.put()
         self.redirect('/')
     
@@ -70,7 +73,8 @@ class UpdateHandler(webapp.RequestHandler):
 class SearchHandler(webapp.RequestHandler):
 
     def get(self):
-        self.response.out.write('Search Handler')
+        path = os.path.join(os.path.dirname(__file__), 'templates/search.html')
+        self.response.out.write(template.render(path, None))
 
 class VoteHandler(webapp.RequestHandler):
 
