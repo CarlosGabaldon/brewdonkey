@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>BrewDonkey.com</title>
+	<title>BrewDonkey.com - {% block page_name %}{% endblock %}</title>
 	<meta name="generator" content="TextMate http://macromates.com/">
 	<meta name="author" content="Carlos Gabaldon">
 	<meta name="keywords" content="" />
@@ -16,23 +16,21 @@
           <div id="header">
 
               <h1><a href="/">BrewDonkey</a></h1>
+              
               <ul id="primary_nav">
-                  <li class="nav">
-                      <a href="#" >Login</a>
-                  </li>
-                  
-                  <li class="nav">
-                      <a href="/beers/search" >Search</a>
-                  </li>
-                  
-                  <li class="nav">
-                      <a href="/beers/new" >New</a>
-                  </li>
-                  
-                  <li class="nav active">
-                    <a href="/">Popular</a>
-                  </li>
-                          
+                {% for nav_item in nav %}
+                   {% ifequal nav_item.path path %}
+                      <li class="nav active">
+                          <a href="{{ nav_item.path }}" >{{ nav_item.text }}</a>
+                      </li>
+                   {% endifequal %}
+                   {% ifnotequal nav_item.path path %}
+                       <li class="nav">
+                           <a href="{{ nav_item.path }}" >{{ nav_item.text }}</a>
+                       </li>
+                    {% endifnotequal %}
+                      
+                {% endfor %}
               </ul>
           </div>
           <div id="content_container">
@@ -43,7 +41,7 @@
             </div>
           </div>
           <div id="footer">
-              <strong>&copy; <a href="http://www.brewdonkey.com">BrewDonkey.com</a></strong>
+              <strong>&copy; <a href="/">BrewDonkey.com</a></strong>
           </div>
       </div>      
     </body>

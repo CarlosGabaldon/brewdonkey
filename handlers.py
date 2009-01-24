@@ -13,9 +13,35 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 import models
 
-# design api with app.....
 
-class ListHandler(webapp.RequestHandler):
+class NavItem(object):
+    """Nav item"""
+    def __init__(self, text, path):
+        self.text = text
+        self.path = path
+        
+
+class Handler(webapp.RequestHandler):
+    
+    nav = [NavItem(text="Login", path="#"),
+           NavItem(text="Search", path="/beers/search"),
+           NavItem(text="New", path="/beers/new"),
+           NavItem(text="Popular", path="/")]
+
+    def render(self, template_name, response=None):
+        
+        if response is None:
+            response = {}
+            
+        response["nav"] = self.nav
+        response["path"] = self.request.path
+        
+            
+        path = os.path.join(os.path.dirname(__file__), template_name)
+        self.response.out.write(template.render(path, response))
+
+
+class ListHandler(Handler):
 
     def get(self):
         
@@ -37,18 +63,15 @@ class ListHandler(webapp.RequestHandler):
             
         response = dict(beers=beers)
             
+        self.render(template_name='templates/list.html', response=response)
 
-        path = os.path.join(os.path.dirname(__file__), 'templates/list.html')
-        self.response.out.write(template.render(path, response))
-
-class NewHandler(webapp.RequestHandler):
+class NewHandler(Handler):
 
     def get(self):
-    
-        path = os.path.join(os.path.dirname(__file__), 'templates/new.html')
-        self.response.out.write(template.render(path, None))
+        
+        self.render(template_name='templates/new.html')
 
-class CreateHandler(webapp.RequestHandler):
+class CreateHandler(Handler):
 
     def post(self):
         beer = models.Beer(name=self.request.get('name'),
@@ -60,39 +83,36 @@ class CreateHandler(webapp.RequestHandler):
         self.redirect('/')
     
 
-class EditHandler(webapp.RequestHandler):
+class EditHandler(Handler):
 
     def get(self):
-        self.response.out.write('Edit Handler')
+        self.response.out.write(self.request.path)
     
-class UpdateHandler(webapp.RequestHandler):
+class UpdateHandler(Handler):
 
     def get(self):
         self.response.out.write('Update Handler')
 
-class SearchHandler(webapp.RequestHandler):
+class SearchHandler(Handler):
 
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'templates/search.html')
-        self.response.out.write(template.render(path, None))
+        self.render(template_name='templates/search.html')
 
-class VoteHandler(webapp.RequestHandler):
+class VoteHandler(Handler):
 
     def get(self):
         self.response.out.write('Vote Handler')
 
 
-class ViewHandler(webapp.RequestHandler):
+class ViewHandler(Handler):
 
     def get(self):
         self.response.out.write('View Handler')
 
-class NotFoundHandler(webapp.RequestHandler):
+class NotFoundHandler(Handler):
    
     def get(self):
-        self.response.out.write("""We sorry, but we could not find the 
-                                resource that you were looking for at
-                                this url.""")
+        self.render(template_name='templates/404.html')
         
 
 def main():
