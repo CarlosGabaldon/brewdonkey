@@ -75,9 +75,11 @@ class CreateHandler(Handler):
 
     def post(self):
         beer = models.Beer(name=self.request.get('name'),
-                           description=self.request.get('description'))
-                           
-        brewery = models.Brewery(name=self.request.get('brewery_name'))
+                           description=self.request.get('description'),
+                           permalink = self.request.get('name').strip().replace(' ', '+'))
+                       
+        brewery = models.Brewery(name=self.request.get('brewery_name'))  
+        brewery.put()  
         beer.brewery = brewery
         beer.put()
         self.redirect('/')
@@ -107,7 +109,24 @@ class VoteHandler(Handler):
 class ViewHandler(Handler):
 
     def get(self):
-        self.response.out.write('View Handler')
+        
+        permalink = self.request.get("name").replace(' ', '+').strip()
+        
+        # self.response.out.write(permalink)
+        #return
+       
+        if permalink is None:
+            self.redirect('/') 
+            
+        
+        beer = models.Beer.find_by(attribute="permalink", value=permalink)
+        
+        if beer is None:
+            self.render(template_name='templates/404.html')
+            return
+        
+        response = dict(beer=beer)
+        self.render(template_name='templates/view.html', response=response)
 
 class NotFoundHandler(Handler):
    

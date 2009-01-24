@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block page_name %}{{beer.name}}{% endblock %}
+
+{% block content %}
+
+<h2>{{beer.name}}</h2>
+
+<br/>
+
+  <label>Description:</label><br/>
+  {{beer.description}}
+  <label>Brewery:</label><br/>
+  {{beer.brewery.name}}<br/>
+  
+  <a href="/">Back</a>
+  
+{% endblock %}
