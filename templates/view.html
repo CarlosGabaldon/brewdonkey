@@ -4,14 +4,25 @@
 
 {% block content %}
 
-<h2>{{beer.name}}</h2>
-
-<br/>
-
-  <label>Description:</label><br/>
+  <h1>{{beer.name}}</h1>
+  <br/>
   {{beer.description}}
-  <label>Brewery:</label><br/>
-  {{beer.brewery.name}}<br/>
+  <br/><br/>
+  <h2>from:</h2>
+  {{beer.brewery.name}} 
+  <br/><br/>
+  <h2>alcohol by volume:</h2>
+  {{beer.abv}}%
+  <br/><br/>
+  <h2>located:</h2>
+  {{beer.brewery.address}}
+  <br/><br/>
+  <h2>website:</h2>
+  {% ifnotequal beer.brewery.website None %}
+    <a href="{{beer.brewery.website}}">{{beer.brewery.website}}</a>
+  {% endifnotequal %}
+  <br/><br/>
+  
   
   <a href="/">Back</a>
   

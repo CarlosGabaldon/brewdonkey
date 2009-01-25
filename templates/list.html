@@ -5,12 +5,11 @@
 
 {% block content %}
 
-<h2>Popular Beers</h2>
-<br/>
-  <ul>
+  <ul class="list">
   {% for beer in beers %}
-      <li><a href="/beers/view?name={{beer.permalink}}">{{ beer.name }} - 
-          {{ beer.description|escape }}
+      <li>
+         <a href="/beers/view?name={{beer.permalink}}">{{ beer.name }}</a> 
+          <div>{{ beer.short_desc|escape }}</div>
       </li> 
   {% endfor %}
   </ul>

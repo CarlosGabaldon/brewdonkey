@@ -12,18 +12,24 @@ from google.appengine.ext import db
 class Brewery(db.Model):
     name = db.StringProperty()
     address = db.PostalAddressProperty()
+    website = db.StringProperty()
     logo = db.BlobProperty()
   
 class Beer(db.Model):
     name = db.StringProperty(required=True)
     permalink = db.StringProperty()
     description = db.StringProperty(required=True, multiline=True)
+    abv = db.FloatProperty()
     logo = db.BlobProperty()
     brewery = db.ReferenceProperty(Brewery)
     votes = db.IntegerProperty()
     date_created = db.DateTimeProperty(auto_now_add=True)
     date_modified = db.DateTimeProperty(auto_now=True)
- 
+        
+    def _short_desc(self):
+        """Return short description."""
+        return  self.description[:150]
+    short_desc = property(_short_desc)
     
     @classmethod
     def find_popular(cls):
