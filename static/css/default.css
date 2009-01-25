@@ -98,6 +98,12 @@
     min-width:80%;
     width:80%;
     }
+    
+    .narrow {
+    max-width:10%;
+    min-width:10%;
+    width:10%;       
+    }
 
 /* Beer list. */
 

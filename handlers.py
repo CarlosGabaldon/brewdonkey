@@ -24,7 +24,7 @@ class NavItem(object):
 class Handler(webapp.RequestHandler):
     
     nav = [NavItem(text="Login", path="#"),
-           NavItem(text="Search", path="/beers/search"),
+           NavItem(text="Search", path="/beer/search"),
            NavItem(text="New", path="/beers/new"),
            NavItem(text="Popular", path="/")]
 
@@ -102,6 +102,11 @@ class SearchHandler(Handler):
 
     def get(self):
         self.render(template_name='templates/search.html')
+        
+    def post(self):
+        ### add search support?? use google search??
+        self.render(template_name='templates/search.html')
+        
 
 class VoteHandler(Handler):
 
@@ -146,7 +151,7 @@ def main():
         ('/beers/create', CreateHandler),
         ('/beers/edit', EditHandler),
         ('/beers/update', UpdateHandler),
-        ('/beers/search', SearchHandler),
+        ('/beer/search', SearchHandler),
         ('/beers/vote', VoteHandler),
         ('/beers/view', ViewHandler),
         ('/.*', NotFoundHandler)], debug=True)
