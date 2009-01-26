@@ -10,9 +10,20 @@
 
   <form action="/beer/search" method="post">
     <div>
-      <input type="text" id="value" name="value" class="text_field big wide" />
+      <input type="text" id="query" name="query" value="{{query}}" class="text_field big wide" />
       <input type="submit" value="Submit" class="blue_button big">
     </div>
   </form>
+  
+  {% ifnotequal beers None %}
+    <ul class="list">
+      {% for beer in beers %}
+          <li>
+             <a href="/beers/view?name={{beer.permalink}}">{{ beer.name }}</a> 
+              <div>{{ beer.short_desc|escape }}</div>
+          </li> 
+      {% endfor %}
+    </ul>
+  {% endifnotequal %}
   
 {% endblock %}

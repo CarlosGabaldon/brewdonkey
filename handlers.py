@@ -104,8 +104,10 @@ class SearchHandler(Handler):
         self.render(template_name='templates/search.html')
         
     def post(self):
-        ### add search support?? use google search??
-        self.render(template_name='templates/search.html')
+        query = self.request.get('query')
+        beers = models.Beer.find_by_query(query=query)
+        response = dict(beers=beers, query=query)
+        self.render(template_name='templates/search.html', response=response)
         
 
 class VoteHandler(Handler):
