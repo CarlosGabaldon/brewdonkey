@@ -28,7 +28,11 @@ class Beer(db.Model):
         
     def _short_desc(self):
         """Return short description."""
-        return  self.description[:150]
+        short = self.description[:150]
+        if len(self.description) > len(short):
+            return "%s..." % short
+        else:
+            return short
     short_desc = property(_short_desc)
     
     @classmethod
