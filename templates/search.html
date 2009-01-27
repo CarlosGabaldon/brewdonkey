@@ -16,6 +16,10 @@
   </form>
   
   {% ifnotequal beers None %}
+    {% ifequal beers.count 0 %}
+       <br/>
+      <h2>Sorry we did not find your beer, help us out by <a href="/beers/new">adding it</a>!</h2>
+    {% endifequal %}
     <ul class="list">
       {% for beer in beers %}
           <li>

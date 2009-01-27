@@ -51,7 +51,7 @@ class Beer(db.Model):
             return results[0] 
             
     @classmethod
-    def find_by_query(cls, query):
+    def search(cls, query):
         # expand search to support wildcards and search accross Beer and Brewery models
         beers = Beer.gql("WHERE name = '%s'" % query)
         return beers
