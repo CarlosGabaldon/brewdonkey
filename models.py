@@ -20,6 +20,7 @@ class Beer(db.Model):
     permalink = db.StringProperty()
     description = db.StringProperty(required=True, multiline=True)
     abv = db.FloatProperty()
+    ibu = db.IntegerProperty()
     logo = db.BlobProperty()
     brewery = db.ReferenceProperty(Brewery)
     votes = db.IntegerProperty()
