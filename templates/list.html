@@ -8,7 +8,7 @@
   <ul class="list">
   {% for beer in beers %}
       <li>
-         <a href="/beers/view?name={{beer.permalink}}">{{ beer.name }}</a> 
+         <a href="/beers/view?name={{beer.permalink}}">{{ beer.name|escape  }}</a> 
           <div>{{ beer.short_desc|escape }}</div>
       </li> 
   {% endfor %}

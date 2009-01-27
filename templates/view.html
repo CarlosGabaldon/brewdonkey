@@ -4,12 +4,12 @@
 
 {% block content %}
 
-  <h1>{{beer.name}}</h1>
+  <h1>{{beer.name|escape }}</h1>
   <br/>
-  {{beer.description}}
+  {{beer.description|escape }}
   <br/><br/>
   <h2>from:</h2>
-  {{beer.brewery.name}} - 
+  {{beer.brewery.name|escape }} - 
   <a href="#">more beers</a>
   <br/><br/>
   <h2>alcohol by volume (abv):</h2>
@@ -19,11 +19,11 @@
   {{beer.ibu}}
   <br/><br/>
   <h2>located:</h2>
-  {{beer.brewery.address}}
+  {{beer.brewery.address|escape }}
   <br/><br/>
   <h2>website:</h2>
   {% ifnotequal beer.brewery.website None %}
-    <a href="{{beer.brewery.website}}">{{beer.brewery.website}}</a>
+    <a href="{{beer.brewery.website}}">{{beer.brewery.website|escape }}</a>
   {% endifnotequal %}
   <br/><br/>
   
