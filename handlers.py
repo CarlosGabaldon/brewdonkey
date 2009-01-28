@@ -77,7 +77,7 @@ class CreateHandler(Handler):
         beer = models.Beer(name=self.request.get('name'),
                            description=self.request.get('description'),
                            abv=float(self.request.get('abv')),
-                           ibu=self.request.get('ibu'),
+                           ibu=int(self.request.get('ibu')),
                            permalink = self.request.get('name').strip().replace(' ', '+'))
                        
         brewery = models.Brewery(name=self.request.get('brewery_name'),

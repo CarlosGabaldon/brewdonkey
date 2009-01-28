@@ -8,6 +8,7 @@ Copyright (c) 2009 __BrewDonkey.com__. All rights reserved.
 """
 
 from google.appengine.ext import db
+from google.appengine.ext import search 
 
 class Brewery(db.Model):
     name = db.StringProperty()
@@ -15,7 +16,7 @@ class Brewery(db.Model):
     website = db.StringProperty()
     logo = db.BlobProperty()
   
-class Beer(db.Model):
+class Beer(search.SearchableModel):
     name = db.StringProperty(required=True)
     permalink = db.StringProperty()
     description = db.StringProperty(required=True, multiline=True)
@@ -53,10 +54,7 @@ class Beer(db.Model):
     @classmethod
     def search(cls, query):
         # expand search to support wildcards and search accross Beer and Brewery models
-        beers = Beer.gql("WHERE name = '%s'" % query)
+        #beers = Beer.gql("WHERE name = '%s'" % query)
+        beers = Beer.all().search(query)
         return beers
         
-
-# Example to access relationship
-#beer = db.get(beer_key)
-#brewery_name = beer.brewery.name
