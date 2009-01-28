@@ -11,6 +11,9 @@ handlers:
   static_files: static/images/favicon.ico
   upload: static/css/images/favicon.ico
   
+- url: /export
+  script: data/exporter.py
+  
 - url: .*
   script: handlers.py
   

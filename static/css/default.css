@@ -123,6 +123,16 @@
         ul.list a {
             color: #3e4d5c;
         }
+        
+        
+  #vote-box{
+     
+     float:left;
+     width: 80px;
+     padding: 2px;
+     text-align: center;
+      
+  }
 /* */
 
 
@@ -519,7 +529,7 @@
         width: 600px;
         margin: auto;
         padding: 0px 0px 0px 0px;
-        background: #fff url('images/content_bg.png') repeat-y;
+        background: #fff url('images/bg.png') repeat-y;
         position: relative;
         z-index: 1;
     }

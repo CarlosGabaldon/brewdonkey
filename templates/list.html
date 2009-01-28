@@ -8,6 +8,11 @@
   <ul class="list">
   {% for beer in beers %}
       <li>
+         <div id="vote-box">
+           <img src="/static/css/images/beer-64x64.png" border="0">
+           <a href="#">Like it</a>
+         </div>
+
          <a href="/beers/view?name={{beer.permalink}}">{{ beer.name|escape  }}</a> 
           <div>{{ beer.short_desc|escape }}</div>
       </li> 

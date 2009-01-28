@@ -53,8 +53,6 @@ class Beer(search.SearchableModel):
             
     @classmethod
     def search(cls, query):
-        # expand search to support wildcards and search accross Beer and Brewery models
-        #beers = Beer.gql("WHERE name = '%s'" % query)
         beers = Beer.all().search(query)
         return beers
         
