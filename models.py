@@ -27,6 +27,15 @@ class Beer(search.SearchableModel):
     votes = db.IntegerProperty()
     date_created = db.DateTimeProperty(auto_now_add=True)
     date_modified = db.DateTimeProperty(auto_now=True)
+    
+    def _number_of_votes(self):
+           """Return number of votes."""
+           vote_count = self.votes
+           if vote_count is None:
+               return 0
+           else:
+               return vote_count
+    number_of_votes = property(_number_of_votes)
         
     def _short_desc(self):
         """Return short description."""

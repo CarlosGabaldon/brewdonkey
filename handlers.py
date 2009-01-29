@@ -39,6 +39,16 @@ class Handler(webapp.RequestHandler):
             
         path = os.path.join(os.path.dirname(__file__), template_name)
         self.response.out.write(template.render(path, response))
+        
+        
+    def get_requested_beer(self):
+        permalink = self.request.get("name").replace(' ', '+').strip()
+
+        if permalink is None:
+            self.redirect('/') 
+            
+        return models.Beer.find_by(attribute="permalink", value=permalink)
+        
 
 
 class ListHandler(Handler):
@@ -114,23 +124,26 @@ class SearchHandler(Handler):
 class VoteHandler(Handler):
 
     def get(self):
-        self.response.out.write('Vote Handler')
-
+        
+        beer = self.get_requested_beer()
+        
+        if beer is None:
+            self.render(template_name='templates/404.html')
+            return
+            
+        #beer.vote(user=user)
+        #beer.put()
+        #response = dict(beer=beer)
+        #if self.ajax_request:
+            #return beer.votes
+        #else:
+            #self.redirect('/') 
 
 class ViewHandler(Handler):
 
     def get(self):
         
-        permalink = self.request.get("name").replace(' ', '+').strip()
-        
-        # self.response.out.write(permalink)
-        #return
-       
-        if permalink is None:
-            self.redirect('/') 
-            
-        
-        beer = models.Beer.find_by(attribute="permalink", value=permalink)
+        beer = self.get_requested_beer()
         
         if beer is None:
             self.render(template_name='templates/404.html')
