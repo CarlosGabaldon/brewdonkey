@@ -9,11 +9,15 @@
   {{beer.description|escape }} 
   <br/><br/>
   
+  
   <div class="vote-box-big">
     <img src="/static/css/images/beer-64x64.png" border="0"><br/>
     {{beer.number_of_votes}} votes<br/>
-    <a href="/beers/vote?name={{beer.permalink}}">Like it</a>
+    {% ifnotequal user None %}
+        <a href="/beers/vote?name={{beer.permalink}}">Like it</a>
+    {% endifnotequal %}
   </div>
+  
   
   <h2>from:</h2>
   {{beer.brewery.name|escape }} - 

@@ -43,6 +43,7 @@ class Handler(webapp.RequestHandler):
 
         response["nav"] = self.nav
         response["path"] = self.request.path
+        response["user"] = users.get_current_user()
    
          
         path = os.path.join(os.path.dirname(__file__), template_name)

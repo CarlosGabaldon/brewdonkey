@@ -8,11 +8,15 @@
   <ul class="list">
   {% for beer in beers %}
       <li>
+        
          <div id="vote-box">
            <img src="/static/css/images/beer-32x32.png" border="0"><br/>
            {{beer.number_of_votes}} votes
-           <a href="/beers/vote?name={{beer.permalink}}">Like it</a>
+           {% ifnotequal user None %}
+              <a href="/beers/vote?name={{beer.permalink}}">Like it</a>
+           {% endifnotequal %}
          </div>
+         
 
          <a href="/beers/view?name={{beer.permalink}}">{{ beer.name|escape  }}</a> 
           <div>{{ beer.short_desc|escape }}</div>
