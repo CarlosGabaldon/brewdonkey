@@ -11,6 +11,7 @@ import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
+from google.appengine.api import users
 import models
 
 
@@ -32,11 +33,18 @@ class Handler(webapp.RequestHandler):
         
         if response is None:
             response = {}
-            
+        
+        if users.get_current_user():
+            self.nav[0].path  = users.create_logout_url(self.request.uri)
+            self.nav[0].text  = 'Logout'
+        else:
+            self.nav[0].path  = users.create_login_url(self.request.uri)
+            self.nav[0].text = 'Login'
+
         response["nav"] = self.nav
         response["path"] = self.request.path
-        
-            
+   
+         
         path = os.path.join(os.path.dirname(__file__), template_name)
         self.response.out.write(template.render(path, response))
         
@@ -56,7 +64,7 @@ class ListHandler(Handler):
     def get(self):
         
         beers = models.Beer.find_popular()
-    
+        
         # this will be the common api format...
         if self.request.get('format') == "xml":
             #refactor this into the models..to return xml or json or list
