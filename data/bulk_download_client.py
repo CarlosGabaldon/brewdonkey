@@ -38,8 +38,6 @@ Usage:
     --filename=<path>   Path to the CSV file to store the downloaded data.
                         (Required) The file will be created, and will replace
                         any existing file with the same name.
-    --format=<string>   Format of the downloaded data, either CSV or XML
-                        (Optional: default=CSV)
 
 The exit status will be 0 on success, non-zero on export failure.
 
@@ -71,7 +69,7 @@ class BadServerStatusError(ConnectError):
 
 
 def request_export(host_port, uri, cookie, kind,
-                   key_field, start_val, batch_size, format):
+                   key_field, start_val, batch_size):
   """Sends an HTTP request to download a collection of Entity records.
 
   Args:
@@ -82,7 +80,6 @@ def request_export(host_port, uri, cookie, kind,
     key_field: Name of the 'key' field,
             used for both the sort order and the start_key value
     start_val: Lowest value of key_id to download
-    format: 'CSV' or 'XML'
    
   The client will send this request to the server:
     SELECT * from <kind> WHERE <key_field>  >= <start_val> 
@@ -97,8 +94,7 @@ def request_export(host_port, uri, cookie, kind,
   GQL_TEMPLATE = "SELECT * from %s %s ORDER BY %s" 
   WHERE_CLAUSE_TEMPLATE = "WHERE %s > '%s'" 
 
-  request_values = {"kind": kind, "key": key_field, "limit": batch_size,
-                    "format": format}
+  request_values = {"kind": kind, "key": key_field, "limit": batch_size }
   if start_val:  # first batch
     request_values["start"] = start_val
 
@@ -130,7 +126,7 @@ def request_export(host_port, uri, cookie, kind,
       logging.debug('Received response code %d: %s', status, reason)
       logging.debug('Received content: \n%s', content)
 
-      content_lines = content.split('\n',3)
+      content_lines = content.splitlines()
       assert len(content_lines) >= 3
       item_count, item_count_tag = content_lines[0].split(" ")
       more_count_tag, more_signal = content_lines[1].split(" ")
@@ -138,20 +134,9 @@ def request_export(host_port, uri, cookie, kind,
       assert item_count_tag == 'items', 'item_count_tag not found'
       assert more_count_tag == 'more:',  'more_count_tag not found'
       assert next_kyval_tag == 'next-val:',  'next_kyval_tag not found'
-      return_data = content_lines[3]
-
-      item_count = int(item_count)
-      if format == "CSV":
-        content_count = return_data.count('\n')
-      elif format == "XML":
-        content_count = return_data.count("<%s>" % kind)
-      else:
-        raise TypeError, "Cannot handle format " + format
-      assert content_count == item_count, ('item_count incorrect: '
-                                           'expected=%d actual=%d' %
-                                           (item_count, content_count))
-
+      assert len(content_lines)-3 == int(item_count), 'item_count incorrect'
       more_flag = (more_signal != 'no')
+      return_data = content_lines[3:]
       logging.debug('Received %d items from http://%s%s',
                     int(item_count), host_port, uri)
       logging.debug('More to come: ' + str(more_flag))
@@ -162,7 +147,7 @@ def request_export(host_port, uri, cookie, kind,
     logging.debug('Encountered exception accessing HTTP server: %s', e)
     raise ConnnectError(e)
 
-  return return_data, item_count, more_flag, next_key_val
+  return return_data, more_flag, next_key_val
 
 
 def split_url(url):
@@ -181,28 +166,11 @@ def split_url(url):
   scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
   return netloc, path
 
-def adjusted(content_line, format):
+def adjusted(content_line):
   """ just adds a line break before storing each line to the local disk file
       customize this, if needed, to change the format stored locally      
   """
   return content_line + '\n'
-
-
-def write_preamble(format, kind, destination):
-  """ write any start information to the output file
-      customize this, if needed, to change the format stored locally      
-  """
-  if format == 'XML':
-    destination.write('<?xml version="1.0" ?>\n')
-    destination.write('<downloaded-data>\n')
-
-
-def write_postamble(format, kind, destination):
-  """ write any final information to the output file
-      customize this, if needed, to change the format stored locally      
-  """
-  if format == 'XML':
-    destination.write('</downloaded-data>\n')
 
 
 def get_exported_data(url,
@@ -210,8 +178,7 @@ def get_exported_data(url,
                       batch_size,
                       kind,
                       key_field,
-                      destination,
-                      format):
+                      destination):
   """Exports CSV data using a series of HTTP posts.
 
   Args:
@@ -221,14 +188,12 @@ def get_exported_data(url,
     batch_size: Maximum number of Entity objects to transmit with each request.
     kind: Entity kind of the objects being posted.
     destination: file (or file-like object), available for dependency injection.
-    format: 'CSV' or 'XML'
 
   Returns:
     True if all entities were exported successfully; False otherwise.
   """
   success_flag = True
   host_port, uri = split_url(url)
-  write_preamble(format, kind, destination)
   try:
     logging.info('Starting download; maximum %d entities per post', batch_size)
     start_val = None
@@ -236,29 +201,24 @@ def get_exported_data(url,
     while more_flag:
       try:
         (content,
-         item_count, more_flag,
-         next_key_val) = request_export(host_port, uri, cookie,
-                                        kind, key_field, start_val, batch_size, 
-                                        format)
+         more_flag, next_key_val) = request_export(host_port, uri, cookie,
+                                                   kind, key_field,
+                                                   start_val, batch_size)
 
-        logging.info('Received %d entities', item_count)
-
-        stored_line = adjusted(content, format)
-        destination.write(stored_line)
-        logging.debug('storing:' + stored_line)
+        logging.info('Received %d entities', len(content))
+        for content_line in content:
+          stored_line = adjusted(content_line)
+          destination.write(stored_line)
+          logging.debug('storing:' + stored_line)
 
         destination.flush()
         start_val = next_key_val
-
       except ConnectError, e:
         logging.error('An error occurred while downloading: %s', e)
         more_flag = False
         success_flag = False
-
   finally:
-    write_postamble(format, kind, destination)
     destination.close()
-
   return success_flag
 
 
@@ -296,8 +256,7 @@ def ParseArguments(argv):
      'cookie=',
      'batch_size=',
      'keyfield=',
-     'kind=',
-     'format='])
+     'kind='])
 
   url = None
   filename = None
@@ -306,7 +265,6 @@ def ParseArguments(argv):
   kind = None
   encoding = None
   keyfield = None
-  format = 'CSV'
 
   for option, value in opts:
     if option == '--debug':
@@ -328,10 +286,8 @@ def ParseArguments(argv):
         PrintUsageExit(1)
     if option == '--kind':
       kind = value
-    if option == '--format':
-      format = value
 
-  return (url, cookie, batch_size, kind, keyfield, filename, format)
+  return (url, cookie, batch_size, kind, keyfield, filename)
 
 
 def main(argv):
@@ -345,14 +301,13 @@ def main(argv):
     print >>sys.stderr, 'Invalid arguments'
     PrintUsageExit(1)
 
-  url, cookie, batch_size, kind, keyfield, filename, format = args
+  url, cookie, batch_size, kind, keyfield, filename = args
 
-  # Warning - this program doesn't check if file already exists;
-  #           it over-writes any previous file with the same name 
-  dest_file = open(filename, 'wb')
+  # Warning - no check if file already exists
+  dest_file = open(filename, 'a')
 
   success = get_exported_data(url, cookie, batch_size,
-                              kind, keyfield, dest_file, format)
+                              kind, keyfield, dest_file)
   if success:
     logging.info('Export succcessful')
     return 0
@@ -363,11 +318,11 @@ def main(argv):
 def run_unit_test():
   logging.getLogger().setLevel(logging.DEBUG)
   test_url = 'http://localhost:8080/export'
-  ##  to capture the data instead of writing a file ...  
-  ##  dest = StringIO.StringIO()  
+## to capture the data instead of writing a file ...  
+##  dest = StringIO.StringIO()  
 
   dest = open('test_export.csv', 'w')
-  get_exported_data(test_url, None, 5, 'Employee', 'id_code', dest, 'XML')
+  get_exported_data(test_url, None, 5, 'Employee', 'vk', dest)
 
 
 UNIT_TESTING = False

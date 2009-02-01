@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block page_name %}Popular Beers{% endblock %}
 
 {% block content %}
@@ -8,18 +7,7 @@
   <ul class="list">
   {% for beer in beers %}
       <li>
-        
-         <div id="vote-box">
-           <img src="/static/css/images/beer-32x32.png" border="0"><br/>
-           {{beer.number_of_votes}} votes
-           {% ifnotequal user None %}
-              <a href="/beers/vote?name={{beer.permalink}}">Like it</a>
-           {% endifnotequal %}
-         </div>
-         
-
-         <a href="/beers/view?name={{beer.permalink}}">{{ beer.name|escape  }}</a> 
-          <div>{{ beer.short_desc|escape }}</div>
+         {% render_beer beer user %}
       </li> 
   {% endfor %}
   </ul>

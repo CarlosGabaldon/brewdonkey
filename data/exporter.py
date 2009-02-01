@@ -42,7 +42,6 @@ except KeyError:
     utest_init.setup_api_stuff()
     print 'setup_api_stuff() - ok'
 
-
 import datetime, time
 import logging
 import csv
@@ -52,7 +51,6 @@ import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.ext import db   # import GqlQuery, _kind_map
 
-# change this line to import your real model definition
 from bulk_testdata import Employee, DowJonesHistory
 
 ERROR_404_HTML = """
@@ -119,6 +117,7 @@ def parse_to_data_type(in_value, dbproperty):
 def field_list_by_property_def(entity):
     """ generates a list of properties, in the order they were defined
     """
+    outfile = StringIO.StringIO()
     field_list = list(key for key, val in sorted(
         entity.properties().items(), key=lambda x: x[1].creation_counter))
     #logging.debug(str(field_list))
@@ -127,8 +126,6 @@ def field_list_by_property_def(entity):
 
 def entity_data_to_csv(record_list, field_list=None,
                        quoting_option=csv.QUOTE_NONNUMERIC):
-    """ converts values for a list of models to CSV format
-    """
     if not record_list: return ''
     if not field_list:
         field_list = field_list_by_property_def(record_list[0])
@@ -143,30 +140,9 @@ def entity_data_to_csv(record_list, field_list=None,
     return csv_text
 
 
-def entity_data_to_xml(record_list, field_list=None):                       
-    """ converts values for a list of models to XML format
-    """
-    if not record_list: return ''
-    if not field_list:
-        field_list = field_list_by_property_def(record_list[0])
-
-    def tagify(tag, val):
-        return "<%s>%s</%s>" % (tag, val, tag)
-
-    from xml.sax import saxutils
-    def render_val(rec, field):
-        return saxutils.escape(unicode(getattr(rec, field)))
-
-    return "\n\n".join(tagify(rec.__class__.__name__,
-                              "\n  " +
-                              "\n  ".join(tagify(field, render_val(rec, field))
-                                          for field in field_list) + "\n")
-                       for rec in record_list)
-
-
-# want data in a format other than CSV or XML?
-# write another method that formats the data the way you want it
-
+# want data in a format other than CSV?
+# re-define this to a method that formats the data the way you want it
+data_formatter = entity_data_to_csv
 
 class ExportRequestHandler(webapp.RequestHandler):
     """Common get/put functions, template generation etc.
@@ -176,20 +152,6 @@ class ExportRequestHandler(webapp.RequestHandler):
         """ handle a GET request: 'dispatch' to the proper method """
         logging.debug("ExportRequestHandler - Start")
 
-        format = self.request.get('format')
-        if not format:
-            format = 'CSV'  # default
-        else:
-            format = format.upper() 
-        if format == 'CSV':
-            data_formatter = entity_data_to_csv
-        elif format == 'XML':
-            data_formatter = entity_data_to_xml
-        else:
-            logging.error("invalid value for 'format': " + format)
-            self.error(500)
-            self.response.out.write(ERROR_500_HTML)
-            return
 
         kind = self.request.get('kind')
         if not kind:
@@ -309,6 +271,7 @@ def query_test_data(start_val, batch_size):
 
 APP_LIST = [ ('.*', ExportRequestHandler), ]
 
+
 def main():
   logging.getLogger().setLevel(logging.DEBUG)
   application = webapp.WSGIApplication(APP_LIST)
@@ -316,4 +279,5 @@ def main():
 
 if __name__ == '__main__':
   main()
+
 

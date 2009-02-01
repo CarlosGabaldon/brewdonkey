@@ -65,3 +65,34 @@ class Beer(search.SearchableModel):
         beers = Beer.all().search(query)
         return beers
         
+        
+
+
+
+class Election(db.Model):
+     """
+     Map if a user voted on a beer.
+
+     """
+     beer = db.ReferenceProperty(Beer)
+     user = db.UserProperty(required=True)
+     date_voted = db.DateTimeProperty(auto_now_add=True)
+
+     @classmethod
+     def has_voted(cls, user, beer):
+    
+        if not user: return False
+        election = db.Query(Election)
+        election.filter('beer =', beer)
+        election.filter('user =', user)
+        return election.get()
+
+     @classmethod
+     def vote(cls, user, beer):
+         
+         beer.votes = beer.votes + 1
+         beer.put()
+         election = Election(beer=beer, user=user)
+         election.put()                                   
+         return beer.votes
+

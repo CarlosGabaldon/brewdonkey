@@ -14,6 +14,8 @@ from google.appengine.ext.webapp import template
 from google.appengine.api import users
 import models
 
+template.register_template_library('templatetags.model_tags')
+
 
 class NavItem(object):
     """Nav item"""
@@ -140,13 +142,19 @@ class VoteHandler(Handler):
             self.render(template_name='templates/404.html')
             return
             
-        #beer.vote(user=user)
-        #beer.put()
-        #response = dict(beer=beer)
+        if models.Election.has_voted(user=users.get_current_user(), beer=beer):
+            self.redirect('/')
+            return
+            
+        votes = models.Election.vote(user=users.get_current_user(), beer=beer)
+        
+        self.response.out.write(votes)
+        
         #if self.ajax_request:
-            #return beer.votes
+           # return votes
         #else:
-            #self.redirect('/') 
+        #    self.redirect('/') 
+            
 
 class ViewHandler(Handler):
 
