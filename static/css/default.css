@@ -107,6 +107,14 @@
 
 /* Beer list. */
 
+
+ #beer-detail{
+     
+     margin-bottom: 20px;
+     
+ }
+
+
     ul.list {
         list-style-type: none;
         font-weight: bold;

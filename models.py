@@ -24,7 +24,7 @@ class Beer(search.SearchableModel):
     ibu = db.IntegerProperty()
     logo = db.BlobProperty()
     brewery = db.ReferenceProperty(Brewery)
-    votes = db.IntegerProperty()
+    votes = db.IntegerProperty(default=0)
     date_created = db.DateTimeProperty(auto_now_add=True)
     date_modified = db.DateTimeProperty(auto_now=True)
     
@@ -32,9 +32,11 @@ class Beer(search.SearchableModel):
            """Return number of votes."""
            vote_count = self.votes
            if vote_count is None:
-               return 0
+               return "%s votes" % 0
+           elif vote_count == 1:
+               return "%s vote" % str(vote_count)
            else:
-               return vote_count
+               return "%s votes" % str(vote_count)
     number_of_votes = property(_number_of_votes)
         
     def _short_desc(self):
@@ -90,9 +92,12 @@ class Election(db.Model):
      @classmethod
      def vote(cls, user, beer):
          
+         if beer.votes is None:
+             beer.votes = 0
+         
          beer.votes = beer.votes + 1
          beer.put()
          election = Election(beer=beer, user=user)
          election.put()                                   
-         return beer.votes
+         return beer.number_of_votes
 

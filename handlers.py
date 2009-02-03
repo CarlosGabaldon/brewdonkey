@@ -53,7 +53,7 @@ class Handler(webapp.RequestHandler):
         
         
     def get_requested_beer(self):
-        permalink = self.request.get("name").replace(' ', '+').strip()
+        permalink = self.request.get("name").strip()
 
         if permalink is None:
             self.redirect('/') 
@@ -99,7 +99,7 @@ class CreateHandler(Handler):
                            description=self.request.get('description'),
                            abv=float(self.request.get('abv')),
                            ibu=int(self.request.get('ibu')),
-                           permalink = self.request.get('name').strip().replace(' ', '+'))
+                           permalink = self.request.get('name').strip().replace(' ', '-'))
                        
         brewery = models.Brewery(name=self.request.get('brewery_name'),
                                  website=self.request.get('website'),
@@ -148,7 +148,11 @@ class VoteHandler(Handler):
             
         votes = models.Election.vote(user=users.get_current_user(), beer=beer)
         
-        self.response.out.write(votes)
+        
+        json_response = """{'beer': '%s',
+                            'votes': '%s' }""" % (beer.permalink, votes)
+        
+        self.response.out.write(json_response)
         
         #if self.ajax_request:
            # return votes

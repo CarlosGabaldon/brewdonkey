@@ -4,40 +4,8 @@
 
 {% block content %}
 
-  <h1>{{beer.name|escape }}</h1>
-  <br/>
-  {{beer.description|escape }} 
-  <br/><br/>
+{% render_beer beer user "True" %}
   
-  
-  <div class="vote-box-big">
-    <img src="/static/css/images/beer-64x64.png" border="0"><br/>
-    {{beer.number_of_votes}} votes<br/>
-    {% ifnotequal user None %}
-        <a href="/beers/vote?name={{beer.permalink}}">Like it</a>
-    {% endifnotequal %}
-  </div>
-  
-  
-  <h2>from:</h2>
-  {{beer.brewery.name|escape }} - 
-  <a href="#">more beers</a>
-  <br/><br/>
-  <h2>alcohol by volume (abv):</h2>
-  {{beer.abv}}%
-  <br/><br/>
-  <h2>international bitterness units(ibu):</h2>
-  {{beer.ibu}}
-  <br/><br/>
-  <h2>located:</h2>
-  {{beer.brewery.address|escape }}
-  <br/><br/>
-  <h2>website:</h2>
-  {% ifnotequal beer.brewery.website None %}
-    <a href="{{beer.brewery.website}}">{{beer.brewery.website|escape }}</a>
-  {% endifnotequal %}
-  <br/><br/>  
-  
-  <a href="/">Back</a>
+<a href="/">Back</a>
   
 {% endblock %}
