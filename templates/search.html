@@ -23,9 +23,8 @@
     <ul class="list">
       {% for beer in beers %}
           <li>
-             <a href="/beers/view?name={{beer.permalink}}">{{ beer.name }}</a> 
-              <div>{{ beer.short_desc|escape }}</div>
-          </li> 
+             {% render_beer beer user %}
+          </li>
       {% endfor %}
     </ul>
   {% endifnotequal %}

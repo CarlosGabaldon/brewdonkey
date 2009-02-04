@@ -52,15 +52,6 @@ class Handler(webapp.RequestHandler):
         self.response.out.write(template.render(path, response))
         
         
-    def get_requested_beer(self):
-        permalink = self.request.get("name").strip()
-
-        if permalink is None:
-            self.redirect('/') 
-            
-        return models.Beer.find_by(attribute="permalink", value=permalink)
-        
-
 
 class ListHandler(Handler):
 
@@ -134,9 +125,9 @@ class SearchHandler(Handler):
 
 class VoteHandler(Handler):
 
-    def get(self):
+    def get(self, permalink):
         
-        beer = self.get_requested_beer()
+        beer = models.Beer.find_by(attribute="permalink", value=permalink)
         
         if beer is None:
             self.render(template_name='templates/404.html')
@@ -155,17 +146,17 @@ class VoteHandler(Handler):
         self.response.out.write(json_response)
         
         #if self.ajax_request:
-           # return votes
+           # self.response.out.write(json_response)
         #else:
         #    self.redirect('/') 
             
 
 class ViewHandler(Handler):
 
-    def get(self):
+    def get(self, permalink):
         
-        beer = self.get_requested_beer()
-        
+        beer = models.Beer.find_by(attribute="permalink", value=permalink)
+         
         if beer is None:
             self.render(template_name='templates/404.html')
             return
@@ -189,8 +180,8 @@ def main():
         ('/beers/edit', EditHandler),
         ('/beers/update', UpdateHandler),
         ('/beer/search', SearchHandler),
-        ('/beers/vote', VoteHandler),
-        ('/beers/view', ViewHandler),
+        ('/beers/vote/([^/]+)/*$', VoteHandler),
+        ('/beer/([^/]+)/*$', ViewHandler),
         ('/.*', NotFoundHandler)], debug=True)
                                        
     run_wsgi_app(application)

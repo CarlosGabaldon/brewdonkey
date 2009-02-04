@@ -11,7 +11,7 @@
       <img src="/static/css/images/beer-64x64.png" border="0"><br/>
       <span id="beer-{{beer.permalink}}-vote">{{beer.number_of_votes}}</span><br/>
       {% if user_can_vote %}
-          <a class="vote-up" href="/beers/vote?name={{beer.permalink}}">Like it</a>
+          <a class="vote-up" href="/beers/vote/{{beer.permalink}}">Like it</a>
       {% endif %}
     </div>
 
@@ -44,12 +44,12 @@
        <img src="/static/css/images/beer-32x32.png" border="0"><br/>
        <span id="beer-{{beer.permalink}}-vote">{{beer.number_of_votes}}</span><br/>
        {% if user_can_vote %}
-          <a class="vote-up" href="/beers/vote?name={{beer.permalink}}">Like it</a>
+          <a class="vote-up" href="/beers/vote/{{beer.permalink}}">Like it</a>
        {% endif %}
      </div>
  
 
-    <a href="/beers/view?name={{beer.permalink}}">{{ beer.name|escape  }}</a> 
+    <a href="/beer/{{beer.permalink}}">{{ beer.name|escape  }}</a> 
     <div>{{ beer.short_desc|escape }}</div>
   </div>
   
