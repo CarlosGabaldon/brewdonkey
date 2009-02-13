@@ -184,7 +184,7 @@ def main():
         ('/beers/edit', EditHandler),
         ('/beers/update', UpdateHandler),
         ('/beer/search', SearchHandler),
-        ('/beers/vote/([^/]+)/*$', VoteHandler),
+        ('/vote/(.*)', VoteHandler),
         ('/beer/([^/]+)/*$', ViewHandler),
         ('/.*', NotFoundHandler)], debug=True)
                                        
