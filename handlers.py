@@ -57,6 +57,10 @@ class ListHandler(Handler):
 
     def get(self):
         
+        #self.response.out.write(dir(self.request))
+        #self.response.out.write(self.request.accept)
+        #return
+        
         beers = models.Beer.find_popular()
         
         # this will be the common api format...
