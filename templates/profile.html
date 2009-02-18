@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block page_name %}{{profile.full_name}}{% endblock %}
+
+{% block content %}
+
+<div id="avatar-image">
+    <img src="{{profile.avatar}}" 
+         width="60" 
+         height="60" alt="{{profile.full_name}}" />
+</div>
+<div id="avatar-username">
+    {{profile.user_name}} - {{profile.country}}
+</div>
+    
+<h4>Added:</h4>
+<ul>
+	{% for beer in profile.beers_added %}
+    	<li>
+        	{% render_beer beer user %}
+    	</li>
+	{% endfor %}
+</ul>
+<h4>Voted on:</h4>
+<ul>
+	{% for beer in profile.beers_voted_on %}
+    	<li>
+        	{% render_beer beer user %}
+    	</li>
+	{% endfor %}
+</ul>
+<h4>Commented on:</h4>
+<ul>
+	{% for beer in profile.beers_commented_on %}
+    	<li>
+        	{% render_beer beer user %}
+    	</li>
+	{% endfor %}
+</ul>
+{% endblock %}

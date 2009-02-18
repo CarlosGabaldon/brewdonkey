@@ -167,6 +167,21 @@ class ViewHandler(Handler):
         
         response = dict(beer=beer)
         self.render(template_name='templates/view.html', response=response)
+        
+        
+        
+class ProfileHandler(Handler):
+    
+    def get(self, user_name):
+        
+        profile = models.Profile.find_by_user_name(user_name=user_name)
+        
+        if profile is None:
+            self.render(template_name='templates/404.html')
+            return
+            
+        response = dict(profile=profile)
+        self.render(template_name='templates/profile.html', response=response)
 
 class NotFoundHandler(Handler):
    
@@ -178,6 +193,7 @@ def main():
 
     application = webapp.WSGIApplication([
         ('/', ListHandler),
+        ('/people/(.*)', ProfileHandler),
         ('/beers/list', ListHandler),
         ('/beers/new', NewHandler),
         ('/beers/create', CreateHandler),

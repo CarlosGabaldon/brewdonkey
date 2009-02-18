@@ -10,6 +10,58 @@ Copyright (c) 2009 __BrewDonkey.com__. All rights reserved.
 from google.appengine.ext import db
 from google.appengine.ext import search 
 
+class Profile(db.Model):
+    
+    country_code = db.StringProperty()
+    user = db.UserProperty(required=True)
+    avatar = db.StringProperty()
+    
+    def _user_name(self):
+        """Return the person's user name."""
+        return self.user.name
+    user_name = property(_user_name)
+    
+    def _get_full_name(self):
+        """Return the person's full name."""
+        return self.user.full_name
+    full_name = property(_get_full_name)
+    
+    def _get_full_country_name(self):
+        """Return the full country name."""
+        from brewdonkey.form_choices import get_country_name
+        return get_country_name(self.country_code)
+    country = property(_get_full_country_name)
+    
+    def _beers_added(self):
+        """Return the list of beers added by this person."""
+        beers = []
+        return beers
+    beers_added = property(_beers_added)
+    
+    def _beers_voted_on(self):
+        """Return the list of beers voted on by this person."""
+        beers = []
+        return beers
+    beers_voted_on = property(_beers_voted_on)
+    
+    def _beers_commented_on(self):
+        """Return the list of beers comment on by this person."""
+        beers = []
+        return beers
+    beers_commented_on = property(_beers_commented_on)
+    
+    
+    @classmethod
+    def find_by_user_name(cls, user_name):
+      
+        profile = db.GqlQuery("SELECT * FROM Profile where user  = :1", user_name)
+        
+        if profile.count() == 0:
+            return None
+        else:
+            return profile[0]
+
+
 class Brewery(db.Model):
     name = db.StringProperty()
     address = db.PostalAddressProperty()
@@ -68,8 +120,6 @@ class Beer(search.SearchableModel):
         return beers
         
         
-
-
 
 class Election(db.Model):
      """
