@@ -3,7 +3,7 @@
   <div id="beer-detail">
     <h1>{{beer.name|escape }}</h1>
     <br/>
-    {{beer.description|escape }} 
+    {{beer.description|escape }}
     <br/><br/>
 
 
@@ -17,7 +17,7 @@
 
 
     <h2>from:</h2>
-    {{beer.brewery.name|escape }} - 
+    {{beer.brewery.name|escape }} -
     <a href="#">more beers</a>
     <br/><br/>
     <h2>alcohol by volume (abv):</h2>
@@ -33,24 +33,31 @@
     {% ifnotequal beer.brewery.website None %}
       <a href="{{beer.brewery.website}}">{{beer.brewery.website|escape }}</a>
     {% endifnotequal %}
+
+    <h2>Reviews:</h2>
+    {% ifnotequal beer.video None %}
+      {{beer.video|safe }}</a>
+    {% endifnotequal %}
+
   </div>
-    
+
 {% else %}
 
 
   <div id="beer-summary">
     <div id="vote-box">
-      
+
        <img src="/static/css/images/beer-32x32.png" border="0"><br/>
        <span id="beer-{{beer.permalink}}-vote">{{beer.number_of_votes}}</span><br/>
        {% if user_can_vote %}
           <a class="vote-up" href="/vote/{{beer.permalink}}">Like it</a>
        {% endif %}
      </div>
- 
 
-    <a href="/beer/{{beer.permalink}}">{{ beer.name|escape  }}</a> 
+
+    <a href="/beer/{{beer.permalink}}">{{ beer.name|escape  }}</a>
     <div>{{ beer.short_desc|escape }}</div>
   </div>
-  
+
 {% endif %}
+

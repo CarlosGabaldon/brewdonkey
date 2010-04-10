@@ -22,20 +22,20 @@ class NavItem(object):
     def __init__(self, text, path):
         self.text = text
         self.path = path
-        
+
 
 class Handler(webapp.RequestHandler):
-    
+
     nav = [NavItem(text="Login", path="#"),
            NavItem(text="Search", path="/beer/search"),
            NavItem(text="New", path="/beers/new"),
            NavItem(text="Popular", path="/")]
 
     def render(self, template_name, response=None):
-        
+
         if response is None:
             response = {}
-        
+
         if users.get_current_user():
             self.nav[0].path  = users.create_logout_url(self.request.uri)
             self.nav[0].text  = 'Logout'
@@ -46,23 +46,23 @@ class Handler(webapp.RequestHandler):
         response["nav"] = self.nav
         response["path"] = self.request.path
         response["user"] = users.get_current_user()
-   
-         
+
+
         path = os.path.join(os.path.dirname(__file__), template_name)
         self.response.out.write(template.render(path, response))
-        
-        
+
+
 
 class ListHandler(Handler):
 
     def get(self):
-        
+
         #self.response.out.write(dir(self.request))
         #self.response.out.write(self.request.accept)
         #return
-        
+
         beers = models.Beer.find_popular()
-        
+
         # this will be the common api format...
         if self.request.get('format') == "xml":
             #refactor this into the models..to return xml or json or list
@@ -76,15 +76,15 @@ class ListHandler(Handler):
             self.response.out.write(response)
             return
         # common api...
-            
+
         response = dict(beers=beers)
-            
+
         self.render(template_name='templates/list.html', response=response)
 
 class NewHandler(Handler):
 
     def get(self):
-        
+
         self.render(template_name='templates/new.html')
 
 class CreateHandler(Handler):
@@ -94,22 +94,23 @@ class CreateHandler(Handler):
                            description=self.request.get('description'),
                            abv=float(self.request.get('abv')),
                            ibu=int(self.request.get('ibu')),
+                           video=self.request.get('video'),
                            permalink = self.request.get('name').strip().replace(' ', '-'))
-                       
+
         brewery = models.Brewery(name=self.request.get('brewery_name'),
                                  website=self.request.get('website'),
-                                 address=self.request.get('brewery_address'))  
-        brewery.put()  
+                                 address=self.request.get('brewery_address'))
+        brewery.put()
         beer.brewery = brewery
         beer.put()
         self.redirect('/')
-    
+
 
 class EditHandler(Handler):
 
     def get(self):
         self.response.out.write(self.request.path)
-    
+
 class UpdateHandler(Handler):
 
     def get(self):
@@ -119,75 +120,75 @@ class SearchHandler(Handler):
 
     def get(self):
         self.render(template_name='templates/search.html')
-        
+
     def post(self):
         query = self.request.get('query')
         beers = models.Beer.search(query=query)
         response = dict(beers=beers, query=query)
         self.render(template_name='templates/search.html', response=response)
-        
+
 
 class VoteHandler(Handler):
 
     def get(self, permalink):
-        
+
         beer = models.Beer.find_by(attribute="permalink", value=permalink)
-        
+
         if beer is None:
             self.render(template_name='templates/404.html')
             return
-            
+
         if models.Election.has_voted(user=users.get_current_user(), beer=beer):
             self.redirect('/')
             return
-            
+
         votes = models.Election.vote(user=users.get_current_user(), beer=beer)
-        
-        
+
+
         json_response = """{'beer': '%s',
                             'votes': '%s' }""" % (beer.permalink, votes)
-        
+
         self.response.out.write(json_response)
-        
+
         #if self.ajax_request:
            # self.response.out.write(json_response)
         #else:
-        #    self.redirect('/') 
-            
+        #    self.redirect('/')
+
 
 class ViewHandler(Handler):
 
     def get(self, permalink):
-        
+
         beer = models.Beer.find_by(attribute="permalink", value=permalink)
-         
+
         if beer is None:
             self.render(template_name='templates/404.html')
             return
-        
+
         response = dict(beer=beer)
         self.render(template_name='templates/view.html', response=response)
-        
-        
-        
+
+
+
 class ProfileHandler(Handler):
-    
+
     def get(self, user_name):
-        
+
         profile = models.Profile.find_by_user_name(user_name=user_name)
-        
+
         if profile is None:
             self.render(template_name='templates/404.html')
             return
-            
+
         response = dict(profile=profile)
         self.render(template_name='templates/profile.html', response=response)
 
 class NotFoundHandler(Handler):
-   
+
     def get(self):
         self.render(template_name='templates/404.html')
-        
+
 
 def main():
 
@@ -203,9 +204,9 @@ def main():
         ('/vote/(.*)', VoteHandler),
         ('/beer/([^/]+)/*$', ViewHandler),
         ('/.*', NotFoundHandler)], debug=True)
-                                       
+
     run_wsgi_app(application)
-    
+
 
 
 if __name__ == '__main__':
