@@ -5,6 +5,8 @@ models.py
 
 Created by  on 2009-01-19.
 Copyright (c) 2009 __BrewDonkey.com__. All rights reserved.
+Local Datastore viewer: http://localhost:8080/_ah/admin/datastore
+Remote Datastore viewer: https://appengine.google.com/dashboard?&app_id=brewdonkey&version_id=1.341161585300540618
 """
 
 from google.appengine.ext import db

@@ -13,6 +13,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
 import models
+import brew_fetcher
 
 template.register_template_library('templatetags.model_tags')
 
@@ -78,6 +79,33 @@ class ListHandler(Handler):
         # common api...
 
         response = dict(beers=beers)
+
+        self.render(template_name='templates/list.html', response=response)
+
+class BulkHandler(Handler):
+
+    def get(self):
+
+        beers = brew_fetcher.fetch_beers()
+        beer_list = []
+        for i in range(0, len(beers), 2):
+            items = beers[i:i+2]
+            beer = models.Beer(name=str(items[1].contents[0]),
+                           description="This is a new beer",
+                           abv=float(0),
+                           ibu=int(0),
+                           video="None Provided",
+                           permalink= items[1].contents[0].strip().replace(' ', '-'))
+
+            brewery = models.Brewery(name=str(items[0].contents[0]),
+                                     website="None Provided",
+                                     address="None Provided")
+            brewery.put()
+            beer.brewery = brewery
+            beer.put()
+            beer_list.append(beer)
+
+        response = dict(beers=beer_list)
 
         self.render(template_name='templates/list.html', response=response)
 
@@ -198,6 +226,7 @@ def main():
         ('/beers/list', ListHandler),
         ('/beers/new', NewHandler),
         ('/beers/create', CreateHandler),
+        ('/beers/bulk', BulkHandler),
         ('/beers/edit', EditHandler),
         ('/beers/update', UpdateHandler),
         ('/beer/search', SearchHandler),
