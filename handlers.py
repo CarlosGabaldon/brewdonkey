@@ -3,6 +3,10 @@
 """
 brew_handler.py
 
+Local web server: python ~/google_appengine/dev_appserver.py ~/projects/brewdonkey/
+
+Deploying: python ~/google_appengine/appcfg.py update ~/projects/brewdonkey/
+
 Created by  on 2009-01-19.
 Copyright (c) 2009 __BrewDonkey.com__. All rights reserved.
 """
