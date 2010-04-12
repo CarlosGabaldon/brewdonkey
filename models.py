@@ -109,6 +109,12 @@ class Beer(search.SearchableModel):
         return db.GqlQuery("SELECT * FROM Beer ORDER BY votes DESC LIMIT 10")
 
     @classmethod
+    def find_all(cls):
+
+        return db.GqlQuery("SELECT * FROM Beer ORDER BY name ")
+
+
+    @classmethod
     def find_by(cls, attribute, value):
         results = db.GqlQuery("SELECT * FROM Beer WHERE %s = :1" % attribute, value)
 

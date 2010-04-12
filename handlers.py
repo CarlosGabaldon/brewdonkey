@@ -29,7 +29,8 @@ class Handler(webapp.RequestHandler):
 
     nav = [NavItem(text="Login", path="#"),
            NavItem(text="Search", path="/beer/search"),
-           NavItem(text="New", path="/beers/new"),
+           #NavItem(text="New", path="/beers/new"),
+           NavItem(text="All", path="/beers/all"),
            NavItem(text="Popular", path="/")]
 
     def render(self, template_name, response=None):
@@ -54,7 +55,7 @@ class Handler(webapp.RequestHandler):
 
 
 
-class ListHandler(Handler):
+class PopularHandler(Handler):
 
     def get(self):
 
@@ -77,6 +78,16 @@ class ListHandler(Handler):
             self.response.out.write(response)
             return
         # common api...
+
+        response = dict(beers=beers)
+
+        self.render(template_name='templates/list.html', response=response)
+
+class ListHandler(Handler):
+
+    def get(self):
+
+        beers = models.Beer.find_all()
 
         response = dict(beers=beers)
 
@@ -221,9 +232,10 @@ class NotFoundHandler(Handler):
 def main():
 
     application = webapp.WSGIApplication([
-        ('/', ListHandler),
+        ('/', PopularHandler),
         ('/people/(.*)', ProfileHandler),
-        ('/beers/list', ListHandler),
+        ('/beers/popular', PopularHandler),
+        ('/beers/all', ListHandler ),
         ('/beers/new', NewHandler),
         ('/beers/create', CreateHandler),
         ('/beers/bulk', BulkHandler),
