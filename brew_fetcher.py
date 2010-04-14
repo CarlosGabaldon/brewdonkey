@@ -25,10 +25,11 @@ def fetch_beers():
         beer = Beer_Mock()
         try:
             beer_info = items[0].contents[0].split('/')
-            beer.brewery = beer_info[0]
-            beer.name = beer_info[1]
-            beer.website = items[1].contents[0]
-            beer_list.append(beer)
+            if beer_info[1].strip() != "TBA":
+                beer.brewery = str(beer_info[0].strip())
+                beer.name = str(beer_info[1].strip())
+                beer.website = str(items[1].contents[0].strip())
+                beer_list.append(beer)
         except IndexError:
             pass
         except TypeError:

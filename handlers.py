@@ -106,15 +106,15 @@ class BulkHandler(Handler):
         beers = brew_fetcher.fetch_beers()
         beer_list = []
         for b in beers:
-            beer = models.Beer(name=str(b.name),
+            beer = models.Beer(name=b.name,
                            description="This is a new beer",
                            abv=float(0),
                            ibu=int(0),
                            video="None Provided",
                            permalink= b.name.strip().replace(' ', '-'))
 
-            brewery = models.Brewery(name=str(b.brewery),
-                                     website= "http://%s" % (str(b.website)),
+            brewery = models.Brewery(name=b.brewery,
+                                     website= "http://%s" % (b.website),
                                      address="None Provided")
             brewery.put()
             beer.brewery = brewery
