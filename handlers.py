@@ -4,6 +4,8 @@
 brew_handler.py
 
 Local web server: python ~/google_appengine/dev_appserver.py ~/projects/brewdonkey/
+Clear Datastore:  python ~/google_appengine/dev_appserver.py -c  ~/projects/brewdonkey/
+
 
 Deploying: python ~/google_appengine/appcfg.py update ~/projects/brewdonkey/
 
@@ -103,17 +105,16 @@ class BulkHandler(Handler):
 
         beers = brew_fetcher.fetch_beers()
         beer_list = []
-        for i in range(0, len(beers), 2):
-            items = beers[i:i+2]
-            beer = models.Beer(name=str(items[1].contents[0]),
+        for b in beers:
+            beer = models.Beer(name=str(b.name),
                            description="This is a new beer",
                            abv=float(0),
                            ibu=int(0),
                            video="None Provided",
-                           permalink= items[1].contents[0].strip().replace(' ', '-'))
+                           permalink= b.name.strip().replace(' ', '-'))
 
-            brewery = models.Brewery(name=str(items[0].contents[0]),
-                                     website="None Provided",
+            brewery = models.Brewery(name=str(b.brewery),
+                                     website= "http://%s" % (str(b.website)),
                                      address="None Provided")
             brewery.put()
             beer.brewery = brewery
