@@ -114,6 +114,11 @@
 
  }
 
+ #beer-summary{
+
+     padding-bottom: 10px;
+     clear: both;
+ }
 
     ul.list {
         list-style-type: none;
