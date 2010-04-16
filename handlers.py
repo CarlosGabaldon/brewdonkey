@@ -35,9 +35,25 @@ class Handler(webapp.RequestHandler):
 
     nav = [NavItem(text="Login", path="#"),
            NavItem(text="Search", path="/beer/search"),
-           #NavItem(text="New", path="/beers/new"),
            NavItem(text="All", path="/beers/all"),
            NavItem(text="Popular", path="/")]
+
+    def refresh_nav(self, logged_in=False):
+        if logged_in:
+            self.nav[0].path  = users.create_logout_url(self.request.uri)
+            self.nav[0].text  = 'Logout'
+
+            for nav_item in self.nav:
+                if nav_item.text == "New":
+                    return
+            self.nav.insert(2,NavItem(text="New", path="/beers/new"))
+
+        else:
+            self.nav[0].path  = users.create_login_url(self.request.uri)
+            self.nav[0].text = 'Login'
+            for nav_item in self.nav:
+                if nav_item.text == "New":
+                    self.nav.remove(nav_item)
 
     def render(self, template_name, response=None):
 
@@ -45,11 +61,10 @@ class Handler(webapp.RequestHandler):
             response = {}
 
         if users.get_current_user():
-            self.nav[0].path  = users.create_logout_url(self.request.uri)
-            self.nav[0].text  = 'Logout'
+            self.refresh_nav(logged_in=True)
         else:
-            self.nav[0].path  = users.create_login_url(self.request.uri)
-            self.nav[0].text = 'Login'
+            self.refresh_nav()
+
 
         response["nav"] = self.nav
         response["path"] = self.request.path
@@ -129,24 +144,32 @@ class NewHandler(Handler):
 
     def get(self):
 
-        self.render(template_name='templates/new.html')
+        if users.get_current_user():
+            self.render(template_name='templates/new.html')
+        else:
+            self.redirect('/')
 
 class CreateHandler(Handler):
 
-    def post(self):
-        beer = models.Beer(name=self.request.get('name'),
-                           description=self.request.get('description'),
-                           abv=float(self.request.get('abv')),
-                           ibu=int(self.request.get('ibu')),
-                           video=self.request.get('video'),
-                           permalink = self.request.get('name').strip().replace(' ', '-'))
+    def get(self):
+        self.redirect('/')
 
-        brewery = models.Brewery(name=self.request.get('brewery_name'),
-                                 website=self.request.get('website'),
-                                 address=self.request.get('brewery_address'))
-        brewery.put()
-        beer.brewery = brewery
-        beer.put()
+    def post(self):
+        if users.get_current_user():
+            beer = models.Beer(name=self.request.get('name'),
+                               description=self.request.get('description'),
+                               abv=float(self.request.get('abv')),
+                               ibu=int(self.request.get('ibu')),
+                               video=self.request.get('video'),
+                               permalink = self.request.get('name').strip().replace(' ', '-'))
+
+            brewery = models.Brewery(name=self.request.get('brewery_name'),
+                                     website=self.request.get('website'),
+                                     address=self.request.get('brewery_address'))
+            brewery.put()
+            beer.brewery = brewery
+            beer.put()
+
         self.redirect('/')
 
 
