@@ -145,9 +145,9 @@ class NewHandler(Handler):
     def get(self):
 
         if users.get_current_user():
-            response = dict(ibu_range=range(1,100),
-                            abv_range=range(1,100),
-                            float_range=range(0, 9))
+            response = dict(ibu_range=range(1,101),
+                            abv_range=range(1,101),
+                            float_range=range(0, 10))
             self.render(template_name='templates/new.html', response=response)
         else:
             self.redirect('/')
