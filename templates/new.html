@@ -8,14 +8,51 @@
 
 <br/>
   <form action="/beers/create" method="post">
-    <div><h2>name:</h2><input type="text" id="name" name="name" class="text_field big wide" /></div><br/>
-    <div><h2>description:</h2><textarea name="description" rows="3" cols="60"></textarea></div><br/>
-    <div><h2>alcohol by volume (abv):</h2><input type="text" id="abv" name="abv" class="text_field big narrow"/></div><br/>
-    <div><h2>international bitterness units (ibu):</h2><input type="text" id="ibu" name="ibu" class="text_field big narrow"/></div><br/>
-    <div><h2>brewery:</h2><input type="text" id="brewery_name" name="brewery_name" class="text_field big wide" /></div><br/>
-    <div><h2>brewery location:</h2><input type="text" id="brewery_address" name="brewery_address" class="text_field big wide" /></div><br/>
-    <div><h2>website:</h2><input type="text" id="website" name="website" class="text_field big wide"/></div><br/>
-    <div><h2>Review Video:</h2><input type="text" id="video" name="video" class="text_field big wide"/></div><br/>
+    <div>
+        <h2>name:</h2>
+        <input type="text" id="name" name="name" class="text_field big wide" />
+    </div><br/>
+    <div>
+        <h2>description:</h2>
+        <textarea name="description" rows="3" cols="60"></textarea>
+    </div><br/>
+    <div>
+        <h2>alcohol by volume (abv):
+        <select name="abv">
+            {% for i in abv_range  %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>.
+        <select name="abv_fp">
+            {% for i in float_range  %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>%</h2>
+    </div><br/>
+    <div>
+        <h2>international bitterness units (ibu):
+        <select name="ibu">
+            {% for i in ibu_range  %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select></h2>
+    </div><br/>
+    <div>
+        <h2>brewery:</h2>
+        <input type="text" id="brewery_name" name="brewery_name" class="text_field big wide" />
+    </div><br/>
+    <div>
+        <h2>brewery location:</h2>
+        <input type="text" id="brewery_address" name="brewery_address" class="text_field big wide" />
+    </div><br/>
+    <div>
+        <h2>website:</h2>
+        <input type="text" id="website" name="website" class="text_field big wide"/>
+    </div><br/>
+    <div>
+        <h2>Review Video:</h2>
+        <input type="text" id="video" name="video" class="text_field big wide"/>
+    </div><br/>
 
     <div><input type="submit" value="Submit" class="blue_button big"> or <a href="/">cancel</a></div>
   </form>

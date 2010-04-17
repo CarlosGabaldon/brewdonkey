@@ -145,7 +145,10 @@ class NewHandler(Handler):
     def get(self):
 
         if users.get_current_user():
-            self.render(template_name='templates/new.html')
+            response = dict(ibu_range=range(1,100),
+                            abv_range=range(1,100),
+                            float_range=range(0, 9))
+            self.render(template_name='templates/new.html', response=response)
         else:
             self.redirect('/')
 
@@ -156,9 +159,10 @@ class CreateHandler(Handler):
 
     def post(self):
         if users.get_current_user():
+            abv = "%s.%s" % (self.request.get('abv'), self.request.get('abv_fp'))
             beer = models.Beer(name=self.request.get('name'),
                                description=self.request.get('description'),
-                               abv=float(self.request.get('abv')),
+                               abv=float(abv),
                                ibu=int(self.request.get('ibu')),
                                video=self.request.get('video'),
                                permalink = self.request.get('name').strip().replace(' ', '-'))
