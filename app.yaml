@@ -10,10 +10,14 @@ handlers:
 - url: /favicon.ico
   static_files: static/images/favicon.ico
   upload: static/css/images/favicon.ico
-  
+
 - url: /export
   script: data/exporter.py
-  
+
+- url: /test.*
+  login: admin
+  script: gaeunit.py
+
 - url: .*
   script: handlers.py
-  
+
