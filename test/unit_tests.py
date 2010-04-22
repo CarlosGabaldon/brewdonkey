@@ -12,34 +12,43 @@ Copyright (c) 2009 __BrewDonkey.com__. All rights reserved.
 """
 
 import unittest
+from google.appengine.api import users
 import models
+
 
 class BeerTest(unittest.TestCase):
 
     def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
-    def test_new_beer(self):
-        permalink = 'Foo Beer'.strip().replace(' ', '-')
-        beer = models.Beer(name='Foo Beer',
+        self.permalink = 'Foo Beer'.strip().replace(' ', '-')
+        self.beer = models.Beer(name='Foo Beer',
                                description='A light kung foo brew',
                                abv=20.2,
                                ibu=12,
                                video='None',
-                               permalink = permalink)
+                               permalink = self.permalink)
 
         brewery = models.Brewery(name='Bar Brewery',
                                      website='http://foobar.com',
                                      address='1234 Foo Bar Way')
 
         brewery.put()
-        beer.brewery = brewery
-        beer.put()
+        self.beer.brewery = brewery
+        self.beer.put()
 
-        requested_beer = models.Beer.find_by(attribute="permalink", value=permalink)
+    def tearDown(self):
+        pass
 
-        self.assertEquals(requested_beer.name, beer.name)
+    def test_new_beer(self):
+
+        requested_beer = models.Beer.find_by(attribute="permalink",
+                                             value=self.permalink)
+
+        self.assertEquals(requested_beer.name, self.beer.name)
+
+    def test_vote_for_beer(self):
+
+        votes = models.Election.vote(user=users.get_current_user(),
+                                     beer=self.beer)
+
+        self.assertEquals(votes, self.beer.number_of_votes)
 
