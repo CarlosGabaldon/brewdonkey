@@ -117,28 +117,30 @@ class ListHandler(Handler):
 class BulkHandler(Handler):
 
     def get(self):
+        if users.get_current_user().email() == "cgabaldon@gmail.com":
+            beers = brew_fetcher.fetch_beers()
+            beer_list = []
+            for b in beers:
+                beer = models.Beer(name=b.name,
+                               description="This is a new beer",
+                               abv=float(0),
+                               ibu=int(0),
+                               video="None Provided",
+                               permalink= b.name.strip().replace(' ', '-'))
 
-        beers = brew_fetcher.fetch_beers()
-        beer_list = []
-        for b in beers:
-            beer = models.Beer(name=b.name,
-                           description="This is a new beer",
-                           abv=float(0),
-                           ibu=int(0),
-                           video="None Provided",
-                           permalink= b.name.strip().replace(' ', '-'))
+                brewery = models.Brewery(name=b.brewery,
+                                         website= "http://%s" % (b.website),
+                                         address="None Provided")
+                brewery.put()
+                beer.brewery = brewery
+                beer.put()
+                beer_list.append(beer)
 
-            brewery = models.Brewery(name=b.brewery,
-                                     website= "http://%s" % (b.website),
-                                     address="None Provided")
-            brewery.put()
-            beer.brewery = brewery
-            beer.put()
-            beer_list.append(beer)
+            response = dict(beers=beer_list)
 
-        response = dict(beers=beer_list)
-
-        self.render(template_name='templates/list.html', response=response)
+            self.render(template_name='templates/list.html', response=response)
+        else:
+            self.redirect('/')
 
 class NewHandler(Handler):
 
@@ -175,8 +177,9 @@ class CreateHandler(Handler):
             beer.brewery = brewery
             beer.put()
 
-        self.redirect('/')
-
+            self.redirect('/beer/%s' % beer.permalink)
+        else:
+            self.redirect('/')
 
 class EditHandler(Handler):
 
