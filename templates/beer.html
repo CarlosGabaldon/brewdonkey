@@ -33,7 +33,10 @@
     {% ifnotequal beer.brewery.website None %}
       <a href="{{beer.brewery.website}}">{{beer.brewery.website|escape }}</a>
     {% endifnotequal %}
-
+    <br/><br/>
+    <h2>Added by:</h2>
+    {{beer.added_by_user}}
+    <br/><br/>
     <h2>Reviews:</h2>
     {% ifnotequal beer.video None %}
       {{beer.video }}</a>

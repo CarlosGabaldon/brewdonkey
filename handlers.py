@@ -165,7 +165,8 @@ class CreateHandler(Handler):
                                abv=float(abv),
                                ibu=int(self.request.get('ibu')),
                                video=self.request.get('video'),
-                               permalink = self.request.get('name').strip().replace(' ', '-'))
+                               permalink = self.request.get('name').strip().replace(' ', '-'),
+                               added_by= users.get_current_user().nickname())
 
             brewery = models.Brewery(name=self.request.get('brewery_name'),
                                      website=self.request.get('website'),

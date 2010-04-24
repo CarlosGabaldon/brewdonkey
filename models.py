@@ -83,7 +83,14 @@ class Beer(search.SearchableModel):
     votes = db.IntegerProperty(default=0)
     date_created = db.DateTimeProperty(auto_now_add=True)
     date_modified = db.DateTimeProperty(auto_now=True)
+    added_by = db.StringProperty()
     video = db.StringProperty()
+
+    def _added_by_user(self):
+        if self.added_by is None:
+            return "Anonymous"
+        return self.added_by
+    added_by_user = property(_added_by_user)
 
     def _number_of_votes(self):
            """Return number of votes."""

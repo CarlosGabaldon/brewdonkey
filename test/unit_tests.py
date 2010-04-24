@@ -25,7 +25,8 @@ class BeerTest(unittest.TestCase):
                                abv=20.2,
                                ibu=12,
                                video='None',
-                               permalink = self.permalink)
+                               permalink = self.permalink,
+                               added_by = "cgabaldon@gmail.com")
 
         brewery = models.Brewery(name='Bar Brewery',
                                      website='http://foobar.com',
@@ -44,6 +45,11 @@ class BeerTest(unittest.TestCase):
                                              value=self.permalink)
 
         self.assertEquals(requested_beer.name, self.beer.name)
+
+
+    def test_beer_added_by_user(self):
+
+        self.assertEquals("cgabaldon@gmail.com", self.beer.added_by_user)
 
     def test_vote_for_beer(self):
 
