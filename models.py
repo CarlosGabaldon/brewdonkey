@@ -66,7 +66,7 @@ class Profile(db.Model):
             return profile[0]
 
 
-class Brewery(db.Model):
+class Brewery(search.SearchableModel):
     name = db.StringProperty()
     address = db.PostalAddressProperty()
     website = db.StringProperty()
@@ -134,6 +134,7 @@ class Beer(search.SearchableModel):
 
     @classmethod
     def search(cls, query):
+        # add logic to search by Brewery to find beers..
         beers = Beer.all().search(query)
         return beers
 
