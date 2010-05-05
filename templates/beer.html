@@ -27,7 +27,10 @@
     {{beer.ibu}}
     <br/><br/>
     <h2>located:</h2>
+    <input type="hidden" readonly="readonly" id="brewery_address" value="{{beer.brewery.address|escape }}" />
     {{beer.brewery.address|escape }}
+    <br/>
+    <div id="map_canvas" style="width:400px; height:400px; display: none"></div>
     <br/><br/>
     <h2>website:</h2>
     {% ifnotequal beer.brewery.website None %}
@@ -48,8 +51,7 @@
 
 
   <div id="beer-summary">
-    <div id="vote-box">
-
+     <div id="vote-box">
        <img src="/static/css/images/beer-32x32.png" border="0"><br/>
        <span id="beer-{{beer.permalink}}-vote">{{beer.number_of_votes}}</span><br/>
        {% if user_can_vote %}

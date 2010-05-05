@@ -3,8 +3,8 @@
 """
 brew_handler.py
 
-Local web server: python ~/google_appengine/dev_appserver.py ~/projects/brewdonkey/
-Clear Datastore:  python ~/google_appengine/dev_appserver.py -c  ~/projects/brewdonkey/
+Local web server: python ~/google_appengine/dev_appserver.py ~/projects/business/brewdonkey/
+Clear Datastore:  python ~/google_appengine/dev_appserver.py -c  ~/projects/business/brewdonkey/
 
 
 Deploying: python ~/google_appengine/appcfg.py update ~/projects/brewdonkey/
@@ -170,9 +170,15 @@ class CreateHandler(Handler):
                                permalink = self.request.get('name').strip().replace(' ', '-'),
                                added_by= users.get_current_user().nickname())
 
+
+            address = self.request.get('brewery_address')
+
+            if address == "":
+                address = "None Provided"
+
             brewery = models.Brewery(name=self.request.get('brewery_name'),
                                      website=self.request.get('website'),
-                                     address=self.request.get('brewery_address'))
+                                     address=address)
             brewery.put()
             beer.brewery = brewery
             beer.put()
@@ -225,10 +231,6 @@ class VoteHandler(Handler):
 
         self.response.out.write(json_response)
 
-        #if self.ajax_request:
-           # self.response.out.write(json_response)
-        #else:
-        #    self.redirect('/')
 
 
 class ViewHandler(Handler):
